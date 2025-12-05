@@ -191,7 +191,7 @@ Check logs → problem is shown in terminal.
 **Developer:**  
 👤 Mohammad Nayan  
 📱 WhatsApp: wa.me/+8801615298449  
-🔗 Telegram: @nayan_mohammad  
+🔗 Telegram: @MOHAMMADNAYAN  
 💻 Facebook: facebook.com/profile.php?id=100000959749712  
 
 ---
