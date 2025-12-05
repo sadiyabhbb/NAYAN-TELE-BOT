@@ -4,7 +4,7 @@ module.exports = {
   config: {
     name: "uptime",
     credits: "Nayan",
-    aliases: ["up", "runtime"],
+    aliases: ["runtime"],
     prefix: "auto",
     permission: 0,
     description: "Check the bot's runtime duration",
