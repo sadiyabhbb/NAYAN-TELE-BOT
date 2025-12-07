@@ -1,8 +1,12 @@
 module.exports = {
   config: {
     name: "gc",
+    credits: "LIKHON AHMED",
+    aliases: ["group"],
+    description: " Manage Your Group Chat Lock/Unlock Feature"
     prefix: true,
-    permission: 2 // admin only
+    tags: ["groupM"],
+    permission: 2 
   },
 
   start: async ({ api, event, args }) => {
