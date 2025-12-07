@@ -1,14 +1,14 @@
 module.exports = {
-  ownerUsernames: ["MOHAMMADNAYAN"],//Your Username
-  ownerNumber: "+8801615298449",//Your Number
+  ownerUsernames: ["rx_rihad"],//Your Username
+  ownerNumber: "+8801761838316",//Your Number
   autoUpdate: true,
-  admin: ["5920596290"], // your id
+  admin: ["7933110913"], // your id
   prefix: "/", // dont change prefix 
-  telegramBotToken: "your bot token",//Your Bot Tokens
+  telegramBotToken: "8034233581:AAFySYKNpv2g2XFxc_UdygSOm8RTuyvDxz4",//Your Bot Tokens
   imageUrl: "https://i.postimg.cc/WpmJhNVg/received-383729254132460.jpg",//Thumbnail Url
   port: process.env.PORT || 8053 || 8053, // port
   mess: {
-    ownerlink: "https://t.me/MOHAMMADNAYAN",
+    ownerlink: "https://t.me/rx_rihad",
     eror: "Internal Server Eror 😵",
     owner: "Sorry, this command can only be accessed by the owner!",
     group: "Sorry, this command can only be used within a group!",
