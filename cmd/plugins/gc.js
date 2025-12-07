@@ -3,7 +3,7 @@ module.exports = {
     name: "gc",
     credits: "LIKHON AHMED",
     aliases: ["group"],
-    description: " Manage Your Group Chat Lock/Unlock Feature"
+    description: " Manage Your Group Chat Lock/Unlock Feature",
     prefix: true,
     tags: ["groupM"],
     permission: 2 
