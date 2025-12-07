@@ -1,8 +1,8 @@
 module.exports = {
-  ownerUsernames: ["rx_rihad"],
+  ownerUsernames: ["LIKHONAHMED009"],
   ownerNumber: "+8801761838316",
   autoUpdate: true,
-  admin: ["7933110913"], 
+  admin: ["8287206585"], 
   prefix: "/", 
   telegramBotToken: "8034233581:AAFySYKNpv2g2XFxc_UdygSOm8RTuyvDxz4",
   imageUrl: "https://i.postimg.cc/WpmJhNVg/received-383729254132460.jpg",
