@@ -4,7 +4,7 @@ module.exports = {
     name: "start",
     credits:"LIKHON AHMED",
     aliases: ["strat"],
-    prefix: true
+    prefix: true,
     permission: 0
   },
 
