@@ -4,7 +4,7 @@ module.exports = {
   config: {
     name: "uptime",
     credits: "Nayan",
-    aliases: ["runtime"],
+    aliases: ["runtime"," upt"],
     prefix: "auto",
     permission: 0,
     description: "Check the bot's runtime duration",
@@ -25,7 +25,7 @@ module.exports = {
     const replyMarkup = {
       reply_markup: {
         inline_keyboard: [
-          [{ text: 'Bot Owner', url: 'https://t.me/MOHAMMADNAYAN' }],
+          [{ text: 'Bot Owner', url: 'https://t.me/LIKHONAHMED009' }],
         ],
       },
     };
