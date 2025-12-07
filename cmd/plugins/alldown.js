@@ -10,9 +10,6 @@ module.exports = {
     description: "Auto video downloader (Event Based Only)",
   },
 
-  // =======================
-  // AUTO EVENT HANDLER
-  // =======================
   handleEvent: async function ({ event, api }) {
     try {
       const text = event.body || "";
@@ -21,115 +18,92 @@ module.exports = {
 
       const chatId = msg.chat.id;
 
-      if (!text || !text.startsWith("https://")) return;
+      if (!text.startsWith("http")) return;
 
-      const waitMsg = await api.sendMessage(
-        chatId,
-        "⏳ Processing your video...",
-        { reply_to_message_id: msg.message_id }
-      );
+      const waitMsg = await api.sendMessage(chatId, "⏳ Processing your video...", {
+        reply_to_message_id: msg.message_id
+      });
 
-      // 🔥 NEW API
       const apiURL = `https://nayan-video-downloader.vercel.app/alldown?url=${encodeURIComponent(text)}`;
       const res = await axios.get(apiURL);
 
-      const { high, title } = res.data;
+      // FIXED: correct keys
+      const title = res.data.title || "Video";
+      const high = res.data.url?.high;
+
+      if (!high) throw new Error("Download URL not found!");
 
       const stream = (await axios.get(high, { responseType: "stream" })).data;
-
-      const caption = `🎬 *Title:* ${title}`;
-
-      const markup = {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: "🔗 Bot Owner", url: "https://t.me/MOHAMMADNAYAN" }],
-          ],
-        },
-      };
 
       await api.deleteMessage(chatId, waitMsg.message_id);
 
       await api.sendVideo(chatId, stream, {
-        caption,
+        caption: `🎬 *Title:* ${title}`,
         parse_mode: "Markdown",
         reply_to_message_id: msg.message_id,
-        ...markup,
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: "🔗 Bot Owner", url: "https://t.me/MOHAMMADNAYAN" }]
+          ]
+        }
       });
 
     } catch (error) {
       console.log("Error in alldown handleEvent:", error);
 
-      const fallbackChatId = event?.msg?.chat?.id || event.threadId;
-
       await api.sendMessage(
-        fallbackChatId,
+        event?.msg?.chat?.id,
         "❌ Failed to process this link.",
         { reply_to_message_id: event?.msg?.message_id }
       );
     }
   },
 
-  // =======================
-  // MANUAL /alldl COMMAND
-  // =======================
   start: async ({ event, api }) => {
     try {
       const chatId = event.message.chat.id;
       const msg = event.message;
-      const inputText = event.body;
+      const input = event.body;
 
-      if (!inputText) {
-        await api.sendMessage(
-          chatId,
-          '❌ Input Link! Example: /alldl <link>',
-          { reply_to_message_id: msg.message_id }
-        );
-        return;
+      if (!input) {
+        return api.sendMessage(chatId, "❌ Input Link!", {
+          reply_to_message_id: msg.message_id
+        });
       }
 
-      const waitMsg = await api.sendMessage(
-        chatId,
-        '⏳ Processing your request...',
-        { reply_to_message_id: msg.message_id }
-      );
+      const waitMsg = await api.sendMessage(chatId, "⏳ Processing your request...", {
+        reply_to_message_id: msg.message_id
+      });
 
-      // 🔥 NEW API
-      const apiURL = `https://nayan-video-downloader.vercel.app/alldown?url=${encodeURIComponent(inputText)}`;
+      const apiURL = `https://nayan-video-downloader.vercel.app/alldown?url=${encodeURIComponent(input)}`;
       const res = await axios.get(apiURL);
 
-      const { high, title } = res.data;
+      // FIXED: correct keys
+      const title = res.data.title || "Video";
+      const high = res.data.url?.high;
 
-      const vid = (
-        await axios.get(high, { responseType: 'stream' })
-      ).data;
+      if (!high) throw new Error("Download URL not found!");
 
-      const caption = `🎬 *Title:* ${title}`;
-
-      const replyMarkup = {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '🔗 Bot Owner', url: 'https://t.me/MOHAMMADNAYAN' }],
-          ],
-        },
-      };
+      const stream = (await axios.get(high, { responseType: "stream" })).data;
 
       await api.deleteMessage(chatId, waitMsg.message_id);
 
-      await api.sendVideo(chatId, vid, {
-        caption,
-        parse_mode: 'Markdown',
+      await api.sendVideo(chatId, stream, {
+        caption: `🎬 *Title:* ${title}`,
+        parse_mode: "Markdown",
         reply_to_message_id: msg.message_id,
-        ...replyMarkup,
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: "🔗 Bot Owner", url: "https://t.me/MOHAMMADNAYAN" }]
+          ]
+        }
       });
 
-    } catch (error) {
-      console.error('Error:', error.message);
-
-      await api.sendMessage(
-        event.message.chat.id,
-        '❌ An error occurred while processing your request.',
-        { reply_to_message_id: event.message.message_id }
-      );
+    } catch (err) {
+      console.error(err);
+      await api.sendMessage(chatId, "❌ Error while processing request.", {
+        reply_to_message_id: event.message.message_id
+      });
     }
-  },
+  }
 };
