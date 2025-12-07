@@ -1,16 +1,4 @@
 const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-
-async function downloadVideo(url, filename) {
-  const writer = fs.createWriteStream(filename);
-  const response = await axios.get(url, { responseType: 'stream' });
-  response.data.pipe(writer);
-  return new Promise((resolve, reject) => {
-    writer.on('finish', resolve);
-    writer.on('error', reject);
-  });
-}
 
 module.exports = {
   config: {
@@ -43,13 +31,12 @@ module.exports = {
 
       if (!videoURL) throw new Error("Download URL not found!");
 
-      // Temp file path
-      const filePath = path.join(__dirname, `temp_video_${Date.now()}.mp4`);
-      await downloadVideo(videoURL, filePath);
+      // Directly stream video to Telegram without saving temp file
+      const videoStream = (await axios.get(videoURL, { responseType: 'stream' })).data;
 
       await api.deleteMessage(chatId, waitMsg.message_id);
 
-      await api.sendVideo(chatId, fs.createReadStream(filePath), {
+      await api.sendVideo(chatId, videoStream, {
         caption: `🎬 *Title:* ${title}`,
         parse_mode: "Markdown",
         reply_to_message_id: msg.message_id,
@@ -59,9 +46,6 @@ module.exports = {
           ]
         }
       });
-
-      // Delete temp file
-      fs.unlinkSync(filePath);
 
     } catch (error) {
       console.log("Error in alldown handleEvent:", error);
@@ -95,12 +79,11 @@ module.exports = {
 
       if (!videoURL) throw new Error("Download URL not found!");
 
-      const filePath = path.join(__dirname, `temp_video_${Date.now()}.mp4`);
-      await downloadVideo(videoURL, filePath);
+      const videoStream = (await axios.get(videoURL, { responseType: 'stream' })).data;
 
       await api.deleteMessage(chatId, waitMsg.message_id);
 
-      await api.sendVideo(chatId, fs.createReadStream(filePath), {
+      await api.sendVideo(chatId, videoStream, {
         caption: `🎬 *Title:* ${title}`,
         parse_mode: "Markdown",
         reply_to_message_id: msg.message_id,
@@ -110,8 +93,6 @@ module.exports = {
           ]
         }
       });
-
-      fs.unlinkSync(filePath);
 
     } catch (err) {
       console.error("Error in /alldl command:", err);
