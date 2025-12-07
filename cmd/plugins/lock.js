@@ -5,7 +5,7 @@ module.exports.config = {
   aliases: [],
   description: "Chat Lock System",
   version: "1.0.7",
-  permission: 2,
+  permission: 3,
   prefix: true,
   category: "moderation",
   usages: [
