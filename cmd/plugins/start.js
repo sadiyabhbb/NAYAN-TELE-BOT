@@ -3,7 +3,7 @@ module.exports = {
   config: {
     name: "start",
     credits:"LIKHON AHMED",
-    aliases: ["strat"],
+    aliases: ["st"],
     prefix: true,
     permission: 0
   },
