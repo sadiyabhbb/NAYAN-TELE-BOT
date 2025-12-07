@@ -3,25 +3,26 @@ const axios = require("axios");
 module.exports = {
   config: {
     name: "alldl",
-    aliases: ["ad", "down", "download"],
     credits: "Nayan",
-    prefix: true,
+    prefix: false,
     permission: 0,
-    description: "Download any video using the alldown API"
+    description: "Auto video downloader by detecting URLs"
   },
 
-  start: async ({ api, event, args }) => {
+  // Auto Trigger
+  handleEvent: async ({ api, event }) => {
     try {
-      const { threadId, messageId, senderId } = event;
+      const { body, threadId, messageId, senderId } = event;
 
-      // যদি ইউজার লিংক না দেয়
-      const url = args[0];
-      if (!url) {
-        await api.sendMessage(threadId, "❗একটা ভিডিও লিংক পাঠাও।", {
-          reply_to_message_id: messageId,
-        });
-        return;
-      }
+      if (!body) return;
+
+      // লিংক ডিটেক্ট
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const links = body.match(urlRegex);
+
+      if (!links) return; // যদি লিংক না থাকে, কিছু করবে না
+
+      const url = links[0];
 
       // রিঅ্যাকশন
       api.setMessageReaction("⏳", messageId, threadId, senderId);
@@ -32,7 +33,7 @@ module.exports = {
 
       if (!res.data || !res.data.video) {
         api.setMessageReaction("❌", messageId, threadId, senderId);
-        return api.sendMessage(threadId, "⚠️ ভিডিও ডাউনলোড করা গেল না!", {
+        return api.sendMessage(threadId, "⚠️ ভিডিও পাওয়া যায়নি বা ডাউনলোড সম্ভব হয়নি।", {
           reply_to_message_id: messageId
         });
       }
@@ -46,13 +47,12 @@ module.exports = {
       await api.sendMessage(
         threadId,
         {
-          body: "📥 আপনার ভিডিও রেডি!",
-          attachment: videoBuff,
+          body: "📥 ভিডিও ডাউনলোড সম্পন্ন!",
+          attachment: videoBuff
         },
         { reply_to_message_id: messageId }
       );
 
-      // সফল রিঅ্যাকশন
       api.setMessageReaction("✅", messageId, threadId, senderId);
 
     } catch (err) {
