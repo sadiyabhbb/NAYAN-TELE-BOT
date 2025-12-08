@@ -7,52 +7,53 @@ module.exports = {
     permission: 2
   },
 
-  // এই object দিয়ে track করব কোন thread/mood enable
+  // mood store
   mood: {},
 
-  start: async ({ api, event, args, infoout }) => {
-    const { threadId, messageId, senderId } = event;
-
-    // Toggle mood enable/disable
-    if (!infoout.mood) infoout.mood = {}; // ensure object exists
+  start: async function ({ api, event, args }) {
+    const threadId = event.threadId || event.chatId;
+    const messageId = event.messageId;
 
     if (!args[0]) {
-      return api.sendMessage(threadId, "Usage: /infoout on | off", { reply_to_message_id: messageId });
+      return api.sendMessage(threadId, { text: "Usage: /infoout on | off", reply_to_message_id: messageId });
     }
 
-    const sub = args[0].toLowerCase();
+    const option = args[0].toLowerCase();
 
-    if (sub === "on") {
-      infoout.mood[threadId] = true;
-      return api.sendMessage(threadId, "✅ InfoOut mood ENABLED for this thread.", { reply_to_message_id: messageId });
-    } else if (sub === "off") {
-      infoout.mood[threadId] = false;
-      return api.sendMessage(threadId, "❌ InfoOut mood DISABLED for this thread.", { reply_to_message_id: messageId });
-    } else {
-      return api.sendMessage(threadId, "Unknown option. Use on/off.", { reply_to_message_id: messageId });
+    if (option === "on") {
+      this.mood[threadId] = true;
+      return api.sendMessage(threadId, { text: "✅ InfoOut ENABLED", reply_to_message_id: messageId });
     }
+
+    if (option === "off") {
+      this.mood[threadId] = false;
+      return api.sendMessage(threadId, { text: "❌ InfoOut DISABLED", reply_to_message_id: messageId });
+    }
+
+    return api.sendMessage(threadId, { text: "Unknown option. Use on/off.", reply_to_message_id: messageId });
   },
 
-  // Event listener: সবার msg capture
-  onMessage: async ({ api, event, infoout }) => {
-    const { threadId } = event;
+  onMessage: async function ({ api, event }) {
+    const threadId = event.threadId || event.chatId;
 
-    if (infoout.mood && infoout.mood[threadId]) {
-      // Mood enabled → capture msg
-      const jsonData = {
-        threadId: threadId,
-        messageId: event.messageId,
-        senderId: event.senderId,
-        timestamp: event.timestamp,
-        text: event.body,
-        attachments: event.attachments || [],
-        isReply: event.messageReply ? true : false,
-        replyTo: event.messageReply ? event.messageReply.messageId : null
-      };
+    if (!this.mood[threadId]) return; // mood off → do nothing
 
-      // Send JSON to the same thread OR bot owner
-      const ownerId = "8287206585"; // <-- এখানে নিজের টেলিগ্রাম UID দাও
-      await api.sendMessage(ownerId, "```json\n" + JSON.stringify(jsonData, null, 2) + "\n```", { parse_mode: "Markdown" });
-    }
+    const jsonData = {
+      threadId,
+      messageId: event.messageId,
+      senderId: event.senderId,
+      timestamp: event.timestamp,
+      text: event.body,
+      attachments: event.attachments || [],
+      isReply: !!event.messageReply,
+      replyTo: event.messageReply ? event.messageReply.messageId : null
+    };
+
+    const ownerId = "8287206585";
+
+    await api.sendMessage(ownerId, {
+      text: "```json\n" + JSON.stringify(jsonData, null, 2) + "\n```",
+      parse_mode: "Markdown"
+    });
   }
 };
