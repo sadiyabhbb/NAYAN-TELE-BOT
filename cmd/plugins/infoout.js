@@ -2,7 +2,7 @@ module.exports = {
   config: {
     name: "infoout",
     credits: "Nayan",
-    aliases: ["info"],
+    aliases: ["inf"],
     prefix: true,
     permission: 2
   },
