@@ -2,7 +2,7 @@ module.exports = {
   config: {
     name: "gc",
     credits: "LIKHON AHMED",
-    aliases: ["group"],
+    aliases: ["grp"],
     description: " Manage Your Group Chat Lock/Unlock Feature",
     prefix: true,
     tags: ["groupM"],
