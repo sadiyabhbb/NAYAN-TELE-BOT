@@ -4,7 +4,7 @@ module.exports = {
   autoUpdate: true,
   admin: ["8287206585"], 
   prefix: "/", 
-  telegramBotToken: "8034233581:AAFySYKNpv2g2XFxc_UdygSOm8RTuyvDxz4",
+  telegramBotToken: "8034233581:AAEkxlENfwqragsSmKC7t3w7-fKKLbU0RoU",
   imageUrl: "https://i.postimg.cc/WpmJhNVg/received-383729254132460.jpg",
   port: process.env.PORT || 8053 || 8053, 
   mess: {
